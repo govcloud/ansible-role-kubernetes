@@ -1,15 +1,11 @@
 ---
-- name: resolve platform specific vars
-  include_vars: '{{item}}'
-  with_first_found:
-    - files:
-        - '{{ansible_distribution}}-{{ansible_distribution_release}}.yml'
-        - '{{ansible_distribution}}.yml'
-        - '{{ansible_os_family}}.yml'
-      skip: true
-      paths:
-        - '{{role_path}}/vars'
+- name: install required kubespray deps
+  become: yes
+  yum:
+    pkg: "{{ item }}"
+    state: present
+  with_items:
+    - python-netaddr
 
-- include_tasks: '{{kubernetes_kubectl_installer | default("kubectl")}}.yml'
+- include: jinja.yml
 
-- include_tasks: '{{kubernetes_helm_installer | default("helm")}}.yml'
