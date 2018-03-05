@@ -7,5 +7,13 @@
   with_items:
     - python-netaddr
 
-- include: jinja.yml
+- name: Disable swap
+  command: swapoff -a
 
+- name: Remove swapfile from /etc/fstab
+  mount:
+    name: swap
+    fstype: swap
+    state: absent
+
+- include: jinja.yml
